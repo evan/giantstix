@@ -2,6 +2,7 @@ require "sinatra"
 require "zlib"
 require "atom/pub"
 require "open-uri"
+require "sinatra/reloader"
 
 get '/giants/:whatever' do
   feed = Atom::Feed.new do |f|
@@ -12,8 +13,11 @@ get '/giants/:whatever' do
     open("http://sfgiants.seasonticketrights.com/Charter-Seat-Licenses/Charter-Seat-Licenses.aspx") do |g|
       g.read.scan(/title=\".*?\"/) do |m|
         if m =~ /Listing/
+          next unless m =~ /Club/
+          seats = m[/Seat Number\(s\)(.*)"/, 1].split(" - ")
+          puts seats.inspect
+          next unless seats.first.to_i - seats.last.to_i == -1
           f.entries << Atom::Entry.new do |e|
-            next unless m =~ /Club/
             m = m[7..-2]
             e.id = m[/(\d+)/, 1]
             e.title = m
