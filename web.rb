@@ -13,6 +13,9 @@ get '/giants' do
       g.read.scan(/title=\".*?\"/) do |m|
         if m =~ /Listing/
           f.entries << Atom::Entry.new do |e|
+            next unless m =~ /Club/
+            m = m[7..-2]
+            e.id = m[/(\d+)/, 1]
             e.title = m
             e.content = Atom::Content::Html.new(m)
           end
