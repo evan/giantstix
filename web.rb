@@ -3,7 +3,7 @@ require "zlib"
 require "atom/pub"
 require "open-uri"
 
-get '/giants' do
+get '/giants/:whatever' do
   feed = Atom::Feed.new do |f|
     f.title = "SF Giants Seat Marketplace"
     f.id = "http://sfgiants.seasonticketrights.com/Charter-Seat-Licenses/Charter-Seat-Licenses.aspx"
